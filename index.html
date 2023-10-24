@@ -13,7 +13,7 @@
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
-    text-shadow: 2px 1px red;
+    text-shadow: 0.1rem 0.1rem red;
     color: white;
     display: flex;
     position: fixed;
@@ -28,19 +28,37 @@
  <body>
   <p id="dfd">Dan före</p>
   <script>
-   const MILLISEKUNDER_PER_DAG = 1000 * 60 * 60 * 24;
-   var nu = new Date();
-   var dopparedan = new Date("24 dec 2022");
-   var skillnad = skillnad(nu, dopparedan);
-   function skillnad(a, b) {
+   const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+   let now = new Date();
+   let afterChristmas = now.getMonth() == 11 && now.getDate() > 24;
+   let dopparedan = new Date(now.getFullYear() + (afterChristmas ? 1 : 0), 11, 24);
+   let difference = calculateDifference(now, dopparedan);
+   
+   
+   function calculateDifference(a, b) {
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-    return Math.floor((utc2 - utc1) / MILLISEKUNDER_PER_DAG);
+    return Math.floor((utc2 - utc1) / MILLISECONDS_PER_DAY);
    }
-   for(i = 0; i < skillnad - 1; i++) {
+   
+   
+   for (i = 0; i < difference - 1; i++)
     document.getElementById("dfd").innerHTML = document.getElementById("dfd").innerHTML + " dan före";
-   }
+    
    document.getElementById("dfd").innerHTML = document.getElementById("dfd").innerHTML + " dopparedan!";
+   
+   if (difference == 0)
+    document.getElementById("dfd").innerHTML = "God jul!";
+   
+   
+   setStyle();
+   
+   function setStyle() {
+       let fontSize = 90 * Math.exp(-0.003 * document.getElementById("dfd").innerHTML.length) + 10;
+       let shadow = fontSize * 0.003;
+       document.getElementById("dfd").style.fontSize = fontSize + "px";
+       document.getElementById("dfd").style.textShadow = shadow + "rem " + shadow + "rem red"; 
+   }
   </script>
  </body>
 </html>
